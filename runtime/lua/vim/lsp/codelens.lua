@@ -160,8 +160,13 @@ function M.display(lenses, bufnr, client_id)
       return a.range.start.character < b.range.start.character
     end)
     for j, lens in ipairs(line_lenses) do
-      local text = (lens.command and lens.command.title or 'Unresolved lens ...'):gsub('%s+', ' ')
-      table.insert(chunks, { text, 'LspCodeLens' })
+      local text ---@type string
+      if vim.opt.list:get() then
+        text = (lens.command and " " .. lens.command.title or ' Unresolved lens ...'):gsub('%s+', ' ')
+      else
+        text = (lens.command and lens.command.title or 'Unresolved lens ...'):gsub('%s+', ' ')
+      end
+      table.insert(chunks, {text, 'LspCodeLens' })
       if j < num_line_lenses then
         table.insert(chunks, { ' | ', 'LspCodeLensSeparator' })
       end
